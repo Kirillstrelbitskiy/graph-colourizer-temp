@@ -171,8 +171,59 @@ def build_implications_graph(initial_graph, initial_colors, num_colors):
 #     colors = [int(val) for val in input().split()]
 
 #     solution = build_implications_graph(graph, colors, 3)
-    
+
 #     print(find_2_sat(solution))
+
+
+def read_data():
+    num_vertices, num_edges = map(int, input().split())
+
+    graph = []
+    for _ in range(num_edges):
+        a, b = map(int, input().split())
+        graph.append((a, b))
+
+    colors = [int(val) for val in input().split()]
+
+    return graph, colors
+
+
+def find_colors(sat_solution, init_colors, num_colors):
+    num_vertices = len(init_colors)
+
+    ans_colors = []
+    for vertex in range(num_vertices):
+        ver_color = -1
+
+        for color in range(num_colors):
+            idx = vertex * num_colors + color
+
+            if sat_solution[idx] and color != init_colors[vertex]:
+                ver_color = color
+
+        if ver_color != -1:
+            ans_colors.append(ver_color)
+
+    return ans_colors
+
+
+def main():
+    num_colors = 3
+
+    initial_graph, initial_colors = read_data()
+
+    implications_graph = build_implications_graph(
+        initial_graph, initial_colors, num_colors)
+
+    two_sat_solution = find_2_sat(implications_graph)
+
+    if two_sat_solution == None:
+        print("No solution")
+        return
+
+    ans_colors = find_colors(two_sat_solution, initial_colors, num_colors)
+
+    print(ans_colors)
 
 
 if __name__ == "__main__":
