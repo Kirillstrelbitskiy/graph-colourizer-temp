@@ -8,6 +8,10 @@ import numpy as np
 
 
 def dfs_type_1(graph):
+    """
+    First DFS used for typological sort.
+    """
+
     order = []
     visited = set()
 
@@ -33,6 +37,10 @@ def dfs_type_1(graph):
 
 
 def dfs_type_2(start, color, components, graph):
+    """
+    Second DFS used for finding components in the graph.
+    """
+
     stack = [start]
     components[start] = color
 
