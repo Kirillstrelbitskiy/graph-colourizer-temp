@@ -77,19 +77,6 @@ def find_2_sat(graph):
 
     return assigned_values
 
-# Main function that was used for testing 2-SAT algorithm.
-
-# def main():
-#     num_vertices, num_edges = map(int, input().split())
-
-#     graph = [[] for _ in range(num_vertices)]
-#     for _ in range(num_edges):
-#         a, b = map(int, input().split())
-#         graph[b].append(a)
-
-#     solution = find_2_sat(graph)
-#     print(solution)
-
 
 # Creating an graph of implications.
 
@@ -157,22 +144,6 @@ def build_implications_graph(initial_graph, initial_colors, num_colors):
             reversed_graph[v_ver].append(u_ver)
 
     return reversed_graph
-
-# Main function that was used for testing Constructing implications graph algorithm.
-
-# def main():
-#     num_vertices, num_edges = map(int, input().split())
-
-#     graph = []
-#     for _ in range(num_edges):
-#         a, b = map(int, input().split())
-#         graph.append((a, b))
-
-#     colors = [int(val) for val in input().split()]
-
-#     solution = build_implications_graph(graph, colors, 3)
-
-#     print(find_2_sat(solution))
 
 
 def read_data(file_path, colors_names):
