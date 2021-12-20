@@ -4,6 +4,8 @@ This module allows to colourize a graph in three colors (red, blue and green).
 
 from __future__ import unicode_literals
 import doctest
+import os
+import argparse
 
 # 2-sat find solution implementation
 
@@ -95,7 +97,7 @@ def vertex_idx(vertex, color, opp, num_colors):
 
 
 def build_implications_graph(initial_graph, initial_colors, num_colors):
-    init_graph_sz = len(initial_graph)
+    init_graph_sz = len(initial_colors)
     num_vertecies = init_graph_sz * num_colors * 2
 
     implications_graph = [[] for _ in range(num_vertecies)]
@@ -149,6 +151,9 @@ def build_implications_graph(initial_graph, initial_colors, num_colors):
 def read_data(file_path, colors_names):
     graph = []
     colors = {}
+
+    num_verticies = 0
+
     with open(file_path, "r", encoding="utf-8") as file:
         for line in file:
             values = line.strip().split(',')
@@ -161,7 +166,14 @@ def read_data(file_path, colors_names):
             colors[u_ver] = u_color
             colors[v_ver] = v_color
 
-    return graph, colors
+            num_verticies = max(num_verticies, max(u_ver, v_ver) + 1)
+
+    final_colors = [-1 for _ in range(num_verticies)]
+    for vertex in range(num_verticies):
+        if vertex in colors:
+            final_colors[vertex] = colors[vertex]
+
+    return graph, final_colors
 
 
 def find_colors(sat_solution, init_colors, num_colors, colors_names):
@@ -201,6 +213,23 @@ def colourize_graph(initial_graph, initial_colors, colors_names):
     return ans_colors
 
 
+def parse_file_path():
+    parser = argparse.ArgumentParser(description='Graph Colourizer')
+    parser.add_argument('-file', type=str, help='The path to a graph file')
+
+    args = parser.parse_args()
+
+    path_file = "graph.csv"
+    if args.file:
+        path_file = args.file
+
+    if not os.path.isfile(path_file):
+        print("A file with given path doesn't exist")
+        exit()
+
+    return path_file
+
+
 def main():
     colors_names = {
         'R': 0,
@@ -211,10 +240,15 @@ def main():
         2: 'B',
     }
 
-    initial_graph, initial_colors = read_data("tests/test.csv", colors_names)
+    file_path = parse_file_path()
+
+    initial_graph, initial_colors = read_data(file_path, colors_names)
 
     ans_colors = colourize_graph(initial_graph, initial_colors, colors_names)
-    print(ans_colors)
+
+    if ans_colors:
+        print("Solution was found")
+        print(ans_colors)
 
 
 if __name__ == "__main__":
