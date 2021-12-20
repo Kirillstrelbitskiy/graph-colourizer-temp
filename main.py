@@ -175,20 +175,25 @@ def build_implications_graph(initial_graph, initial_colors, num_colors):
 #     print(find_2_sat(solution))
 
 
-def read_data():
-    num_vertices, num_edges = map(int, input().split())
-
+def read_data(file_path, colors_names):
     graph = []
-    for _ in range(num_edges):
-        a, b = map(int, input().split())
-        graph.append((a, b))
+    colors = {}
+    with open(file_path, "r", encoding="utf-8") as file:
+        for line in file:
+            values = line.strip().split(',')
 
-    colors = [int(val) for val in input().split()]
+            u_ver, v_ver = int(values[0]) - 1, int(values[1]) - 1
+            u_color, v_color = colors_names[values[2]], colors_names[values[3]]
+
+            graph.append((u_ver, v_ver))
+
+            colors[u_ver] = u_color
+            colors[v_ver] = v_color
 
     return graph, colors
 
 
-def find_colors(sat_solution, init_colors, num_colors):
+def find_colors(sat_solution, init_colors, num_colors, colors_names):
     num_vertices = len(init_colors)
 
     ans_colors = []
@@ -202,15 +207,13 @@ def find_colors(sat_solution, init_colors, num_colors):
                 ver_color = color
 
         if ver_color != -1:
-            ans_colors.append(ver_color)
+            ans_colors.append((vertex + 1, colors_names[ver_color]))
 
     return ans_colors
 
 
-def main():
+def colourize_graph(initial_graph, initial_colors, colors_names):
     num_colors = 3
-
-    initial_graph, initial_colors = read_data()
 
     implications_graph = build_implications_graph(
         initial_graph, initial_colors, num_colors)
@@ -221,8 +224,25 @@ def main():
         print("No solution")
         return
 
-    ans_colors = find_colors(two_sat_solution, initial_colors, num_colors)
+    ans_colors = find_colors(
+        two_sat_solution, initial_colors, num_colors, colors_names)
 
+    return ans_colors
+
+
+def main():
+    colors_names = {
+        'R': 0,
+        'G': 1,
+        'B': 2,
+        0: 'R',
+        1: 'G',
+        2: 'B',
+    }
+
+    initial_graph, initial_colors = read_data("tests/test.csv", colors_names)
+
+    ans_colors = colourize_graph(initial_graph, initial_colors, colors_names)
     print(ans_colors)
 
 
