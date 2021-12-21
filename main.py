@@ -148,6 +148,8 @@ def build_implications_graph(initial_graph, initial_colors, num_colors):
     return reversed_graph
 
 
+# Finding solution
+
 def read_data(file_path, colors_names):
     graph = []
     colors = {}
@@ -231,7 +233,7 @@ def parse_file_path():
 
 
 def main():
-    colors_names = {
+    colors_names = {    
         'R': 0,
         'G': 1,
         'B': 2,
